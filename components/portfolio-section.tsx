@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { VideoUpload } from "@/components/video-upload"
+import { DocumentUpload } from "@/components/document-upload"
 
 interface Evidence {
   title: string
@@ -43,6 +44,14 @@ export function PortfolioSection({ id, title, description, evidence, reflection 
             acceptedFormats={['mp4', 'mov', 'avi', 'webm', 'mkv']}
           />
         )}
+
+        {/* Document Upload - Show for all sections */}
+        <DocumentUpload
+          maxSizeMB={10}
+          acceptedFormats={['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'gif', 'webp']}
+          title="Upload Supporting Documents"
+          description="Add certificates, screenshots, or documents as evidence"
+        />
 
         {/* Evidence Card */}
         <Card className="p-8 md:p-12 space-y-6 border-border/50 shadow-sm">
