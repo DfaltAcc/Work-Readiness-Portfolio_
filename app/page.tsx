@@ -43,22 +43,24 @@ export default function Home() {
           evidence={{
             title: "Interview Preparation & Techniques",
             description:
-              "Comprehensive training in interview preparation, question handling, and professional self-presentation for various interview formats.",
+              "Comprehensive training in interview preparation, question handling, and professional self-presentation for various interview formats including technical, behavioral, and panel interviews.",
             highlights: [
-              "Research and preparation strategies",
-              "STAR method for behavioral questions",
-              "Body language and non-verbal communication",
-              "Follow-up and professional etiquette",
+              "Advanced research techniques for company culture and role requirements",
+              "STAR method mastery for behavioral and situational questions",
+              "Professional body language, eye contact, and vocal delivery",
+              "Technical interview preparation and problem-solving demonstrations",
+              "Post-interview follow-up strategies and professional networking",
+              "Salary negotiation and benefits discussion techniques",
             ],
           }}
           reflection={{
             situation:
-              "I participated in interview skills workshops to prepare for entering the professional workforce.",
-            task: "I needed to develop strategies for effectively presenting my skills, experience, and value to potential employers.",
+              "During my work readiness program, I struggled with interview anxiety and lacked confidence when articulating my technical skills and experiences to potential employers. My initial mock interviews revealed gaps in my preparation strategy and communication approach.",
+            task: "I needed to transform my interview performance by developing comprehensive preparation strategies, mastering the STAR technique for storytelling, and building confidence in presenting my value proposition to employers across different interview formats.",
             action:
-              "I practiced answering common interview questions using the STAR technique, researched companies thoroughly, and participated in mock interviews to refine my approach.",
+              "I enrolled in intensive interview skills workshops and practiced extensively with career counselors. I researched 15+ companies in my target industry, analyzing their values and requirements. I developed a portfolio of STAR-formatted stories covering various scenarios, practiced technical problem-solving out loud, and recorded myself to improve my delivery. I also participated in 8 mock interviews with different professionals, incorporating feedback after each session.",
             result:
-              "My interview performance improved significantly. I became more confident in articulating my strengths and learned to handle challenging questions with composure.",
+              "My interview confidence increased dramatically - from a 3/10 to an 8/10 self-rating. I successfully navigated a challenging panel interview for a software development role, receiving positive feedback on my clear communication and thorough preparation. The interviewer specifically praised my ability to explain complex technical concepts simply and my thoughtful questions about company culture. I learned that authentic preparation, rather than memorized responses, creates genuine confidence and connection with interviewers.",
           }}
         />
 
