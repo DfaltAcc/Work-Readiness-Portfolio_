@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional Portfolio | Work Readiness</title>
+  <meta name="description" content="Digital portfolio showcasing professional development and work readiness training">
+  <style>
+    /* CSS Variables - Apple-inspired minimal palette */
+    :root {
+      --background: oklch(0.99 0 0);
+      --foreground: oklch(0.15 0 0);
+      --card: oklch(1 0 0);
+      --card-foreground: oklch(0.15 0 0);
+      --primary: oklch(0.15 0 0);
+      --primary-foreground: oklch(0.99 0 0);
+      --secondary: oklch(0.95 0 0);
+      --secondary-foreground: oklch(0.15 0 0);
+      --muted: oklch(0.96 0 0);
+      --muted-foreground: oklch(0.5 0 0);
+      --accent: oklch(0.45 0.15 250);
+      --accent-foreground: oklch(0.99 0 0);
+      --border: oklch(0.9 0 0);
+      --radius: 1rem;
+    }
+
+    /* Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Navigation Styles */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      transition: all 0.3s ease;
+    }
+
+    nav.scrolled {
+      background-color: rgba(252, 252, 252, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-container {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .nav-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
+    }
+
+    .nav-logo {
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: var(--foreground);
+      text-decoration: none;
+    }
+
+    .nav-desktop {
+      display: none;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .nav-desktop {
+        display: flex;
+      }
+    }
+
+    .nav-link {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--foreground);
+    }
+
+    .mobile-menu-btn {
+      display: block;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      color: var(--foreground);
+    }
+
+    @media (min-width: 768px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+
+    .mobile-menu {
+      display: none;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .mobile-menu.open {
+      display: block;
+    }
+
+    .mobile-menu-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      padding-top: 4rem;
+    }
+
+    .hero-content {
+      max-width: 56rem;
+      margin: 0 auto;
+      text-align: center;
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-subtitle {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .hero-title {
+        font-size: 4.5rem;
+      }
+    }
+
+    .hero-description {
+      font-size: 1.125rem;
+      color: var(--muted-foreground);
+      max-width: 42rem;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 768px) {
+      .hero-description {
+        font-size: 1.25rem;
+      }
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding-top: 2rem;
+    }
+
+    @media (min-width: 640px) {
+      .hero-buttons {
+        flex-direction: row;
+      }
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      padding: 0.75rem 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background-color: var(--background);
+      color: var(--foreground);
+      padding: 0.75rem 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary);
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+
+    .portfolio-section {
+      margin-bottom: 8rem;
+      scroll-margin-top: 6rem;
+    }
+
+    .section-header {
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 2.25rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .section-title {
+        font-size: 3rem;
+      }
+    }
+
+    .section-description {
+      font-size: 1.125rem;
+      color: var(--muted-foreground);
+      max-width: 42rem;
+      line-height: 1.6;
+    }
+
+    /* Card Styles */
+    .card {
+      background-color: var(--card);
+      border: 1px solid rgba(229, 229, 229, 0.5);
+      border-radius: var(--radius);
+      padding: 3rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        padding: 3rem;
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: var(--secondary);
+      color: var(--secondary-foreground);
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+      color: var(--muted-foreground);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .highlights-section {
+      padding-top: 1rem;
+    }
+
+    .highlights-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted-foreground);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .highlights-list {
+      list-style: none;
+    }
+
+    .highlight-item {
+      display: flex;
+      align-items: start;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-bullet {
+      color: var(--accent);
+      margin-top: 0.375rem;
+    }
+
+    .highlight-text {
+      color: var(--foreground);
+      line-height: 1.6;
+    }
+
+    /* STAR Reflection Styles */
+    .star-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .star-item {
+      margin-bottom: 1rem;
+    }
+
+    .star-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .star-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 9999px;
+      background-color: rgba(72, 95, 199, 0.1);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .star-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .star-text {
+      color: var(--muted-foreground);
+      line-height: 1.6;
+      padding-left: 3.25rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      margin-top: 8rem;
+    }
+
+    .footer-content {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .footer-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .footer-grid {
+        flex-direction: row;
+      }
+    }
+
+    .footer-section {
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .footer-section:first-child {
+        text-align: left;
+      }
+      .footer-section:last-child {
+        text-align: right;
+      }
+    }
+
+    .footer-text {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      margin-bottom: 0.25rem;
+    }
+
+    /* SVG Icons */
+    .icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav id="nav">
+    <div class="nav-container">
+      <div class="nav-content">
+        <a href="#" class="nav-logo">Portfolio</a>
+
+        <!-- Desktop Navigation -->
+        <div class="nav-desktop">
+          <a href="#business-communication" class="nav-link">Business Communication</a>
+          <a href="#interview-skills" class="nav-link">Interview Skills</a>
+          <a href="#mock-interview" class="nav-link">Mock Interview</a>
+          <a href="#professional-networking" class="nav-link">Networking</a>
+          <a href="#workplace-etiquette" class="nav-link">Workplace Etiquette</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+          <svg class="icon" id="menu-icon">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg class="icon" id="close-icon" style="display: none;">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-content">
+          <a href="#business-communication" class="nav-link">Business Communication</a>
+          <a href="#interview-skills" class="nav-link">Interview Skills</a>
+          <a href="#mock-interview" class="nav-link">Mock Interview</a>
+          <a href="#professional-networking" class="nav-link">Networking</a>
+          <a href="#workplace-etiquette" class="nav-link">Workplace Etiquette</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-subtitle">Digital Portfolio</p>
+      <h1 class="hero-title">Work Readiness & Professional Development</h1>
+      <p class="hero-description">
+        A comprehensive showcase of professional skills, training outcomes, and reflections from the Work Readiness
+        program at Cape Peninsula University of Technology.
+      </p>
+      <div class="hero-buttons">
+        <a href="#business-communication" class="btn-primary">View Portfolio</a>
+        <a href="#workplace-etiquette" class="btn-secondary">Skip to End</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Business Communication Section -->
+    <section id="business-communication" class="portfolio-section">
+      <div class="section-header">
+        <h2 class="section-title">Business Communication</h2>
+        <p class="section-description">Developing professional communication skills for the modern workplace</p>
+      </div>
+
+      <!-- Evidence Card -->
+      <div class="card">
+        <span class="badge">Evidence</span>
+        <h3 class="card-title">Communication Excellence</h3>
+        <p class="card-description">
+          Completed comprehensive training in professional business communication, including written correspondence, presentations, and interpersonal communication strategies.
+        </p>
+        <div class="highlights-section">
+          <h4 class="highlights-title">Key Highlights</h4>
+          <ul class="highlights-list">
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Professional email writing and etiquette</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Effective presentation delivery</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Active listening and feedback techniques</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Cross-cultural communication awareness</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Reflection Card -->
+      <div class="card">
+        <span class="badge">Reflection: STAR Technique</span>
+        <h3 class="card-title">Learning Reflection</h3>
+        <div class="star-grid">
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">S</div>
+              <h4 class="star-title">Situation</h4>
+            </div>
+            <p class="star-text">
+              During the business communication module, I was tasked with preparing and delivering a professional presentation to stakeholders.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">T</div>
+              <h4 class="star-title">Task</h4>
+            </div>
+            <p class="star-text">
+              My responsibility was to communicate complex technical information in a clear, accessible manner while maintaining professional standards.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">A</div>
+              <h4 class="star-title">Action</h4>
+            </div>
+            <p class="star-text">
+              I researched audience needs, structured content logically, created visual aids, and practiced delivery multiple times. I incorporated feedback from peers and refined my approach.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">R</div>
+              <h4 class="star-title">Result</h4>
+            </div>
+            <p class="star-text">
+              The presentation was well-received, with stakeholders praising the clarity and professionalism. I gained confidence in public speaking and learned the importance of audience-centered communication.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interview Skills Section -->
+    <section id="interview-skills" class="portfolio-section">
+      <div class="section-header">
+        <h2 class="section-title">Interview Skills</h2>
+        <p class="section-description">Mastering the art of professional interviews and self-presentation</p>
+      </div>
+
+      <!-- Evidence Card -->
+      <div class="card">
+        <span class="badge">Evidence</span>
+        <h3 class="card-title">Interview Preparation & Techniques</h3>
+        <p class="card-description">
+          Comprehensive training in interview preparation, question handling, and professional self-presentation for various interview formats.
+        </p>
+        <div class="highlights-section">
+          <h4 class="highlights-title">Key Highlights</h4>
+          <ul class="highlights-list">
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Research and preparation strategies</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">STAR method for behavioral questions</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Body language and non-verbal communication</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Follow-up and professional etiquette</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Reflection Card -->
+      <div class="card">
+        <span class="badge">Reflection: STAR Technique</span>
+        <h3 class="card-title">Learning Reflection</h3>
+        <div class="star-grid">
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">S</div>
+              <h4 class="star-title">Situation</h4>
+            </div>
+            <p class="star-text">
+              I participated in interview skills workshops to prepare for entering the professional workforce.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">T</div>
+              <h4 class="star-title">Task</h4>
+            </div>
+            <p class="star-text">
+              I needed to develop strategies for effectively presenting my skills, experience, and value to potential employers.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">A</div>
+              <h4 class="star-title">Action</h4>
+            </div>
+            <p class="star-text">
+              I practiced answering common interview questions using the STAR technique, researched companies thoroughly, and participated in mock interviews to refine my approach.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">R</div>
+              <h4 class="star-title">Result</h4>
+            </div>
+            <p class="star-text">
+              My interview performance improved significantly. I became more confident in articulating my strengths and learned to handle challenging questions with composure.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mock Interview Section -->
+    <section id="mock-interview" class="portfolio-section">
+      <div class="section-header">
+        <h2 class="section-title">Mock Interview</h2>
+        <p class="section-description">Real-world interview simulation and performance evaluation</p>
+      </div>
+
+      <!-- Evidence Card -->
+      <div class="card">
+        <span class="badge">Evidence</span>
+        <h3 class="card-title">Mock Interview Experience</h3>
+        <p class="card-description">
+          Participated in realistic interview simulations with industry professionals, receiving detailed feedback on performance and areas for improvement.
+        </p>
+        <div class="highlights-section">
+          <h4 class="highlights-title">Key Highlights</h4>
+          <ul class="highlights-list">
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Technical and behavioral question practice</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Real-time feedback from professionals</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Video recording and self-assessment</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Improvement plan development</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Reflection Card -->
+      <div class="card">
+        <span class="badge">Reflection: STAR Technique</span>
+        <h3 class="card-title">Learning Reflection</h3>
+        <div class="star-grid">
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">S</div>
+              <h4 class="star-title">Situation</h4>
+            </div>
+            <p class="star-text">
+              I participated in a mock interview session designed to simulate real-world job interviews in the ICT industry.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">T</div>
+              <h4 class="star-title">Task</h4>
+            </div>
+            <p class="star-text">
+              My goal was to demonstrate my technical knowledge, soft skills, and professional demeanor under interview conditions.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">A</div>
+              <h4 class="star-title">Action</h4>
+            </div>
+            <p class="star-text">
+              I prepared thoroughly by researching the company, reviewing my resume, and practicing responses. During the interview, I maintained eye contact, spoke clearly, and used specific examples to support my answers.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">R</div>
+              <h4 class="star-title">Result</h4>
+            </div>
+            <p class="star-text">
+              I received constructive feedback highlighting my strengths in technical communication and areas to improve, such as being more concise. This experience significantly boosted my interview readiness.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Professional Networking Section -->
+    <section id="professional-networking" class="portfolio-section">
+      <div class="section-header">
+        <h2 class="section-title">Professional Networking</h2>
+        <p class="section-description">Building meaningful professional relationships and expanding career opportunities</p>
+      </div>
+
+      <!-- Evidence Card -->
+      <div class="card">
+        <span class="badge">Evidence</span>
+        <h3 class="card-title">Networking Strategies & Practice</h3>
+        <p class="card-description">
+          Training in professional networking techniques, both in-person and online, including LinkedIn optimization and industry event participation.
+        </p>
+        <div class="highlights-section">
+          <h4 class="highlights-title">Key Highlights</h4>
+          <ul class="highlights-list">
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">LinkedIn profile optimization</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Elevator pitch development</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Industry event participation</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Professional relationship maintenance</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Reflection Card -->
+      <div class="card">
+        <span class="badge">Reflection: STAR Technique</span>
+        <h3 class="card-title">Learning Reflection</h3>
+        <div class="star-grid">
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">S</div>
+              <h4 class="star-title">Situation</h4>
+            </div>
+            <p class="star-text">
+              I attended networking workshops and industry events to build professional connections in the ICT field.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">T</div>
+              <h4 class="star-title">Task</h4>
+            </div>
+            <p class="star-text">
+              I needed to develop authentic networking skills and create a professional online presence to expand career opportunities.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">A</div>
+              <h4 class="star-title">Action</h4>
+            </div>
+            <p class="star-text">
+              I optimized my LinkedIn profile, prepared a concise elevator pitch, and actively engaged with professionals at events. I followed up with connections and maintained relationships through meaningful interactions.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">R</div>
+              <h4 class="star-title">Result</h4>
+            </div>
+            <p class="star-text">
+              I expanded my professional network significantly, gained insights into industry trends, and created opportunities for mentorship and potential employment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workplace Etiquette Section -->
+    <section id="workplace-etiquette" class="portfolio-section">
+      <div class="section-header">
+        <h2 class="section-title">Workplace Etiquette</h2>
+        <p class="section-description">Understanding professional standards and workplace culture</p>
+      </div>
+
+      <!-- Evidence Card -->
+      <div class="card">
+        <span class="badge">Evidence</span>
+        <h3 class="card-title">Professional Conduct & Standards</h3>
+        <p class="card-description">
+          Comprehensive training in workplace professionalism, including dress code, time management, teamwork, and ethical conduct.
+        </p>
+        <div class="highlights-section">
+          <h4 class="highlights-title">Key Highlights</h4>
+          <ul class="highlights-list">
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Professional appearance and dress code</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Time management and punctuality</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Teamwork and collaboration</span>
+            </li>
+            <li class="highlight-item">
+              <span class="highlight-bullet">•</span>
+              <span class="highlight-text">Ethical decision-making and integrity</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Reflection Card -->
+      <div class="card">
+        <span class="badge">Reflection: STAR Technique</span>
+        <h3 class="card-title">Learning Reflection</h3>
+        <div class="star-grid">
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">S</div>
+              <h4 class="star-title">Situation</h4>
+            </div>
+            <p class="star-text">
+              Through workplace etiquette training, I learned the importance of professional conduct in organizational settings.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">T</div>
+              <h4 class="star-title">Task</h4>
+            </div>
+            <p class="star-text">
+              I needed to understand and demonstrate appropriate workplace behavior, from punctuality to professional communication.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">A</div>
+              <h4 class="star-title">Action</h4>
+            </div>
+            <p class="star-text">
+              I studied workplace norms, observed professional role models, and consciously applied etiquette principles in all interactions. I sought feedback and adjusted my behavior accordingly.
+            </p>
+          </div>
+          <div class="star-item">
+            <div class="star-header">
+              <div class="star-icon">R</div>
+              <h4 class="star-title">Result</h4>
+            </div>
+            <p class="star-text">
+              I developed a strong professional presence and understanding of workplace culture. This foundation prepared me to integrate smoothly into professional environments and build positive working relationships.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <p class="footer-text">Cape Peninsula University of Technology</p>
+          <p class="footer-text">Diploma in Information and Communication Technology</p>
+          <p class="footer-text" style="margin-top: 0.25rem;">Project Presentation 3 • PRP370S/371S/372S</p>
+        </div>
+        <div class="footer-section">
+          <p class="footer-text">Assessment Period: October 2024</p>
+          <p class="footer-text" style="margin-top: 0.5rem;">© <span id="year"></span> All rights reserved</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navigation scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 20) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    mobileMenuBtn.addEventListener('click', function() {
+      mobileMenu.classList.toggle('open');
+      if (mobileMenu.classList.contains('open')) {
+        menuIcon.style.display = 'none';
+        closeIcon.style.display = 'block';
+      } else {
+        menuIcon.style.display = 'block';
+        closeIcon.style.display = 'none';
+      }
+    });
+
+    // Close mobile menu when clicking a link
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.remove('open');
+        menuIcon.style.display = 'block';
+        closeIcon.style.display = 'none';
+      });
+    });
+
+    // Set current year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
