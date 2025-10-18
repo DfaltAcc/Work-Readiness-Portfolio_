@@ -1,3 +1,5 @@
+"use client"
+
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { VideoUpload } from "@/components/video-upload"
@@ -24,10 +26,6 @@ interface PortfolioSectionProps {
 }
 
 export function PortfolioSection({ id, title, description, evidence, reflection }: PortfolioSectionProps) {
-  const handleVideoUpload = (file: File) => {
-    console.log('Video uploaded:', file.name)
-    // You can add additional logic here to handle the uploaded video
-  }
 
   return (
     <section id={id} className="scroll-mt-24">
@@ -41,7 +39,6 @@ export function PortfolioSection({ id, title, description, evidence, reflection 
         {/* Video Upload - Only show for mock interview section */}
         {id === "mock-interview" && (
           <VideoUpload
-            onVideoUpload={handleVideoUpload}
             maxSizeMB={150}
             acceptedFormats={['mp4', 'mov', 'avi', 'webm', 'mkv']}
           />
