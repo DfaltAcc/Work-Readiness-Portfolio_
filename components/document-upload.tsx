@@ -125,17 +125,36 @@ export function DocumentUpload({
     setIsUploading(true)
     setUploadProgress(0)
 
+    let progressInterval: NodeJS.Timeout | null = null
+    let timeoutId: NodeJS.Timeout | null = null
+
     try {
       // Store file in persistent storage if available
       if (isInitialized) {
-        // Simulate progress during storage
-        const progressInterval = setInterval(() => {
-          setUploadProgress(prev => Math.min(prev + 15, 90))
-        }, 300)
+        // Simulate progress during storage - but don't go to 100% until complete
+        progressInterval = setInterval(() => {
+          setUploadProgress(prev => Math.min(prev + 12, 85))
+        }, 200)
 
-        const fileId = await storeFile(file, 'document')
+        // Add timeout to prevent hanging uploads (30 seconds)
+        const uploadPromise = storeFile(file, 'document')
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(() => {
+            reject(new Error('Upload timeout - operation took too long'))
+          }, 30000) // 30 seconds
+        })
+
+        const fileId = await Promise.race([uploadPromise, timeoutPromise])
         
-        clearInterval(progressInterval)
+        // Clear interval, timeout, and complete progress
+        if (progressInterval) {
+          clearInterval(progressInterval)
+          progressInterval = null
+        }
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
         setUploadProgress(100)
 
         // Create stored file info
@@ -151,10 +170,13 @@ export function DocumentUpload({
         setStoredFileInfos(prev => [...prev, fileInfo])
       } else {
         // Fallback to session-only storage
-        const interval = setInterval(() => {
+        progressInterval = setInterval(() => {
           setUploadProgress(prev => {
             if (prev >= 100) {
-              clearInterval(interval)
+              if (progressInterval) {
+                clearInterval(progressInterval)
+                progressInterval = null
+              }
               return 100
             }
             return prev + 10
@@ -167,6 +189,16 @@ export function DocumentUpload({
       setFileUrls(prev => [...prev, url])
       onDocumentUpload?.(file)
     } catch (error) {
+      // Clear any running progress interval and timeout
+      if (progressInterval) {
+        clearInterval(progressInterval)
+        progressInterval = null
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+        timeoutId = null
+      }
+      
       console.error('Failed to store document:', error)
       console.error('Error details:', {
         errorType: error?.constructor?.name,
@@ -179,12 +211,22 @@ export function DocumentUpload({
       })
       alert('Failed to save document. It will only be available for this session.')
       
+      // Set progress to 100% even on error (for session-only storage)
+      setUploadProgress(100)
+      
       // Continue with session-only storage
       setUploadedFiles(prev => [...prev, file])
       const url = URL.createObjectURL(file)
       setFileUrls(prev => [...prev, url])
       onDocumentUpload?.(file)
     } finally {
+      // Ensure progress interval and timeout are always cleared
+      if (progressInterval) {
+        clearInterval(progressInterval)
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       setIsUploading(false)
     }
   }, [validateFile, isInitialized, storeFile, onDocumentUpload])

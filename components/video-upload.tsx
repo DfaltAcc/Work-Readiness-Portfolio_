@@ -105,17 +105,36 @@ export function VideoUpload({
     setIsUploading(true)
     setUploadProgress(0)
 
+    let progressInterval: NodeJS.Timeout | null = null
+    let timeoutId: NodeJS.Timeout | null = null
+
     try {
       // Store file in persistent storage if available
       if (isInitialized) {
-        // Simulate progress during storage
-        const progressInterval = setInterval(() => {
-          setUploadProgress(prev => Math.min(prev + 15, 90))
-        }, 300)
+        // Simulate progress during storage - but don't go to 100% until complete
+        progressInterval = setInterval(() => {
+          setUploadProgress(prev => Math.min(prev + 12, 85))
+        }, 200)
 
-        const fileId = await storeFile(file, 'video')
+        // Add timeout to prevent hanging uploads (60 seconds for videos)
+        const uploadPromise = storeFile(file, 'video')
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(() => {
+            reject(new Error('Upload timeout - operation took too long'))
+          }, 60000) // 60 seconds for videos (larger files)
+        })
+
+        const fileId = await Promise.race([uploadPromise, timeoutPromise])
         
-        clearInterval(progressInterval)
+        // Clear interval, timeout, and complete progress
+        if (progressInterval) {
+          clearInterval(progressInterval)
+          progressInterval = null
+        }
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
         setUploadProgress(100)
 
         // Create stored file info
@@ -131,10 +150,13 @@ export function VideoUpload({
         setStoredFileInfo(fileInfo)
       } else {
         // Fallback to session-only storage
-        const interval = setInterval(() => {
+        progressInterval = setInterval(() => {
           setUploadProgress(prev => {
             if (prev >= 100) {
-              clearInterval(interval)
+              if (progressInterval) {
+                clearInterval(progressInterval)
+                progressInterval = null
+              }
               return 100
             }
             return prev + 10
@@ -147,8 +169,21 @@ export function VideoUpload({
       setVideoUrl(url)
       onVideoUpload?.(file)
     } catch (error) {
+      // Clear any running progress interval and timeout
+      if (progressInterval) {
+        clearInterval(progressInterval)
+        progressInterval = null
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+        timeoutId = null
+      }
+      
       console.error('Failed to store video:', error)
       alert('Failed to save video. It will only be available for this session.')
+      
+      // Set progress to 100% even on error (for session-only storage)
+      setUploadProgress(100)
       
       // Continue with session-only storage
       setUploadedVideo(file)
@@ -156,6 +191,13 @@ export function VideoUpload({
       setVideoUrl(url)
       onVideoUpload?.(file)
     } finally {
+      // Ensure progress interval and timeout are always cleared
+      if (progressInterval) {
+        clearInterval(progressInterval)
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       setIsUploading(false)
     }
   }, [validateFile, isInitialized, storeFile, onVideoUpload])
