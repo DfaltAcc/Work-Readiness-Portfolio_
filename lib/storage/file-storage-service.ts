@@ -282,6 +282,7 @@ export class FileStorageService {
    */
   private isValidDocumentType(mimeType: string): boolean {
     const validTypes = [
+      // Document types
       'application/pdf',
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -291,7 +292,15 @@ export class FileStorageService {
       'application/vnd.openxmlformats-officedocument.presentationml.presentation',
       'text/plain',
       'text/csv',
-      'application/rtf'
+      'application/rtf',
+      // Image types (for supporting evidence)
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/gif',
+      'image/webp',
+      'image/bmp',
+      'image/tiff'
     ];
     
     return validTypes.includes(mimeType);

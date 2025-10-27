@@ -168,6 +168,15 @@ export function DocumentUpload({
       onDocumentUpload?.(file)
     } catch (error) {
       console.error('Failed to store document:', error)
+      console.error('Error details:', {
+        errorType: error?.constructor?.name,
+        errorMessage: error?.message,
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        isInitialized,
+        storageMethod: 'unknown' // We don't have access to storageMethod here
+      })
       alert('Failed to save document. It will only be available for this session.')
       
       // Continue with session-only storage

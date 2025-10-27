@@ -39,9 +39,26 @@ const DEFAULT_CONFIG: FileProcessorConfig = {
       document: 10 * 1024 * 1024  // 10MB
     },
     allowedTypes: {
-      video: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'],
-      document: ['application/pdf', 'text/plain', 'application/msword', 
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+      video: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/avi', 'video/x-msvideo', 'video/x-ms-wmv'],
+      document: [
+        // Document types
+        'application/pdf', 
+        'text/plain', 
+        'application/msword', 
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        // Image types (for supporting evidence)
+        'image/jpeg',
+        'image/jpg', 
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'image/bmp',
+        'image/tiff'
+      ]
     }
   }
 };

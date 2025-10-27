@@ -133,10 +133,13 @@ export function FileStorageProvider({ children }: FileStorageProviderProps) {
   useEffect(() => {
     const initializeStorage = async () => {
       try {
+        console.log('🔄 Starting storage initialization...');
         dispatch({ type: 'SET_LOADING', payload: true });
         dispatch({ type: 'SET_ERROR', payload: null });
         
         const capability = await fileStorageService.initializeStorage();
+        console.log('📦 Storage capability:', capability);
+        
         dispatch({ 
           type: 'SET_INITIALIZED', 
           payload: { 
@@ -146,19 +149,21 @@ export function FileStorageProvider({ children }: FileStorageProviderProps) {
         });
         
         if (capability.available) {
+          console.log('✅ Storage initialized successfully with method:', capability.method);
           // Load existing files and storage usage
           await Promise.all([
             loadFiles(),
             updateStorageUsage()
           ]);
         } else {
+          console.error('❌ Storage initialization failed:', capability.error);
           dispatch({ 
             type: 'SET_ERROR', 
             payload: capability.error || 'Storage initialization failed' 
           });
         }
       } catch (error) {
-        console.error('Storage initialization failed:', error);
+        console.error('💥 Storage initialization error:', error);
         dispatch({ 
           type: 'SET_ERROR', 
           payload: error instanceof Error ? error.message : 'Storage initialization failed' 
@@ -220,25 +225,33 @@ export function FileStorageProvider({ children }: FileStorageProviderProps) {
   // Store a file
   const storeFile = useCallback(async (file: File, category: 'video' | 'document'): Promise<string> => {
     try {
+      console.log('📁 Starting file storage:', { name: file.name, type: file.type, size: file.size, category });
       dispatch({ type: 'SET_LOADING', payload: true });
       dispatch({ type: 'SET_ERROR', payload: null });
 
       // Check storage quota before processing
       if (state.storageUsage) {
+        console.log('💾 Checking storage quota...');
         storageUsageTracker.validateFileStorage(file.size, state.storageUsage);
       }
 
       // Validate file
+      console.log('✅ Validating file...');
       fileStorageService.validateFile(file, category);
 
       // Generate unique file ID
       const fileId = fileStorageService.generateFileId();
+      console.log('🆔 Generated file ID:', fileId);
 
       // Process file (compression, etc.)
+      console.log('⚙️ Processing file...');
       const processedData = await fileProcessor.processFile(file, category);
+      console.log('✅ File processed:', { compressed: processedData.compressed, finalSize: processedData.finalSize });
 
       // Store file
+      console.log('💾 Storing file in storage...');
       await fileStorageService.storeFile(fileId, file, category, processedData.processedFile as ArrayBuffer);
+      console.log('✅ File stored successfully');
 
       // Create file info for state
       const fileInfo: StoredFileInfo = {
@@ -257,6 +270,7 @@ export function FileStorageProvider({ children }: FileStorageProviderProps) {
       // Update storage usage
       await updateStorageUsage();
 
+      console.log('🎉 File storage completed successfully');
       return fileId;
     } catch (error) {
       const errorMessage = error instanceof StorageError 

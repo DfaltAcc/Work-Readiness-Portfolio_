@@ -2,6 +2,7 @@ import { Navigation } from "@/components/navigation"
 import { Hero } from "@/components/hero"
 import { PortfolioSection } from "@/components/portfolio-section"
 import { Footer } from "@/components/footer"
+import { StorageDebug } from "@/components/storage-debug"
 
 export default function Home() {
   return (
@@ -144,6 +145,7 @@ export default function Home() {
       </div>
 
       <Footer />
+      <StorageDebug />
     </main>
   )
 }
