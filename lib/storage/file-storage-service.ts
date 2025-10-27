@@ -17,12 +17,14 @@ import {
 } from './types';
 import { IndexedDBStorage } from './indexeddb-storage';
 import { LocalStorageStorage } from './localstorage-storage';
+import { MemoryStorage } from './memory-storage';
 
 export class FileStorageService {
   private config: StorageConfig;
   private currentMethod: StorageMethod = StorageMethod.NONE;
   private indexedDBStorage: IndexedDBStorage | null = null;
   private localStorageStorage: LocalStorageStorage | null = null;
+  private memoryStorage: MemoryStorage | null = null;
   private initialized = false;
   private fallbackNotified = false;
 
@@ -91,12 +93,27 @@ export class FileStorageService {
         }
       }
 
-      // No storage available
-      this.currentMethod = StorageMethod.NONE;
-      throw new StorageError(
-        StorageErrorType.STORAGE_UNAVAILABLE,
-        'No storage mechanism available'
-      );
+      // Final fallback to memory storage (session-only)
+      console.warn('All persistent storage methods failed, using memory storage (session-only)');
+      try {
+        this.memoryStorage = new MemoryStorage();
+        await this.memoryStorage.initialize();
+        this.currentMethod = StorageMethod.NONE; // Keep as NONE to indicate non-persistent
+        this.initialized = true;
+        
+        return {
+          method: StorageMethod.NONE,
+          available: true, // Available but not persistent
+          error: 'Using memory storage - files will not persist across sessions'
+        };
+      } catch (error) {
+        console.error('Even memory storage failed:', error);
+        this.currentMethod = StorageMethod.NONE;
+        throw new StorageError(
+          StorageErrorType.STORAGE_UNAVAILABLE,
+          'No storage mechanism available, including memory fallback'
+        );
+      }
 
     } catch (error) {
       this.currentMethod = StorageMethod.NONE;
@@ -363,6 +380,8 @@ export class FileStorageService {
         await this.indexedDBStorage.storeFile(fileId, file, category, processedData);
       } else if (this.currentMethod === StorageMethod.LOCALSTORAGE && this.localStorageStorage) {
         await this.localStorageStorage.storeFile(fileId, file, category, processedData);
+      } else if (this.memoryStorage) {
+        await this.memoryStorage.storeFile(fileId, file, category, processedData);
       } else {
         throw new StorageError(
           StorageErrorType.STORAGE_UNAVAILABLE,
@@ -395,6 +414,8 @@ export class FileStorageService {
         return await this.indexedDBStorage.retrieveFile(fileId);
       } else if (this.currentMethod === StorageMethod.LOCALSTORAGE && this.localStorageStorage) {
         return await this.localStorageStorage.retrieveFile(fileId);
+      } else if (this.memoryStorage) {
+        return await this.memoryStorage.retrieveFile(fileId);
       } else {
         throw new StorageError(
           StorageErrorType.STORAGE_UNAVAILABLE,
@@ -426,6 +447,8 @@ export class FileStorageService {
         await this.indexedDBStorage.deleteFile(fileId);
       } else if (this.currentMethod === StorageMethod.LOCALSTORAGE && this.localStorageStorage) {
         await this.localStorageStorage.deleteFile(fileId);
+      } else if (this.memoryStorage) {
+        await this.memoryStorage.deleteFile(fileId);
       } else {
         throw new StorageError(
           StorageErrorType.STORAGE_UNAVAILABLE,
@@ -458,6 +481,8 @@ export class FileStorageService {
         return await this.indexedDBStorage.listFiles(category);
       } else if (this.currentMethod === StorageMethod.LOCALSTORAGE && this.localStorageStorage) {
         return await this.localStorageStorage.listFiles(category);
+      } else if (this.memoryStorage) {
+        return await this.memoryStorage.listFiles(category);
       } else {
         throw new StorageError(
           StorageErrorType.STORAGE_UNAVAILABLE,
@@ -489,6 +514,8 @@ export class FileStorageService {
         return await this.indexedDBStorage.getStorageUsage();
       } else if (this.currentMethod === StorageMethod.LOCALSTORAGE && this.localStorageStorage) {
         return await this.localStorageStorage.getStorageUsage();
+      } else if (this.memoryStorage) {
+        return await this.memoryStorage.getStorageUsage();
       } else {
         throw new StorageError(
           StorageErrorType.STORAGE_UNAVAILABLE,
@@ -520,6 +547,8 @@ export class FileStorageService {
         await this.indexedDBStorage.clearAllFiles();
       } else if (this.currentMethod === StorageMethod.LOCALSTORAGE && this.localStorageStorage) {
         await this.localStorageStorage.clearAllFiles();
+      } else if (this.memoryStorage) {
+        await this.memoryStorage.clearAllFiles();
       } else {
         throw new StorageError(
           StorageErrorType.STORAGE_UNAVAILABLE,

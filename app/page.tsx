@@ -3,6 +3,8 @@ import { Hero } from "@/components/hero"
 import { PortfolioSection } from "@/components/portfolio-section"
 import { Footer } from "@/components/footer"
 import { StorageDebug } from "@/components/storage-debug"
+import { StorageTest } from "@/components/storage-test"
+import { StorageDiagnostics } from "@/components/storage-diagnostics"
 
 export default function Home() {
   return (
@@ -146,6 +148,8 @@ export default function Home() {
 
       <Footer />
       <StorageDebug />
+      <StorageTest />
+      <StorageDiagnostics />
     </main>
   )
 }

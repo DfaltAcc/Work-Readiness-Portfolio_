@@ -132,45 +132,69 @@ export function FileStorageProvider({ children }: FileStorageProviderProps) {
   // Initialize storage on mount
   useEffect(() => {
     const initializeStorage = async () => {
-      try {
-        console.log('🔄 Starting storage initialization...');
-        dispatch({ type: 'SET_LOADING', payload: true });
-        dispatch({ type: 'SET_ERROR', payload: null });
-        
-        const capability = await fileStorageService.initializeStorage();
-        console.log('📦 Storage capability:', capability);
-        
-        dispatch({ 
-          type: 'SET_INITIALIZED', 
-          payload: { 
-            initialized: capability.available, 
-            method: capability.method 
-          } 
-        });
-        
-        if (capability.available) {
-          console.log('✅ Storage initialized successfully with method:', capability.method);
-          // Load existing files and storage usage
-          await Promise.all([
-            loadFiles(),
-            updateStorageUsage()
-          ]);
-        } else {
-          console.error('❌ Storage initialization failed:', capability.error);
+      const maxRetries = 3;
+      let retryCount = 0;
+      
+      while (retryCount < maxRetries) {
+        try {
+          console.log(`🔄 Starting storage initialization (attempt ${retryCount + 1}/${maxRetries})...`);
+          dispatch({ type: 'SET_LOADING', payload: true });
+          dispatch({ type: 'SET_ERROR', payload: null });
+          
+          const capability = await fileStorageService.initializeStorage();
+          console.log('📦 Storage capability:', capability);
+          
           dispatch({ 
-            type: 'SET_ERROR', 
-            payload: capability.error || 'Storage initialization failed' 
+            type: 'SET_INITIALIZED', 
+            payload: { 
+              initialized: capability.available, 
+              method: capability.method 
+            } 
           });
+          
+          if (capability.available) {
+            console.log('✅ Storage initialized successfully with method:', capability.method);
+            // Load existing files and storage usage
+            try {
+              await Promise.all([
+                loadFiles(),
+                updateStorageUsage()
+              ]);
+              console.log('✅ Files and storage usage loaded successfully');
+            } catch (loadError) {
+              console.warn('⚠️ Failed to load files/usage, but storage is available:', loadError);
+              // Don't fail initialization if file loading fails
+            }
+            break; // Success, exit retry loop
+          } else {
+            console.error('❌ Storage initialization failed:', capability.error);
+            if (retryCount === maxRetries - 1) {
+              // Last attempt failed
+              dispatch({ 
+                type: 'SET_ERROR', 
+                payload: capability.error || 'Storage initialization failed after multiple attempts' 
+              });
+            }
+          }
+        } catch (error) {
+          console.error(`💥 Storage initialization error (attempt ${retryCount + 1}):`, error);
+          if (retryCount === maxRetries - 1) {
+            // Last attempt failed
+            dispatch({ 
+              type: 'SET_ERROR', 
+              payload: error instanceof Error ? error.message : 'Storage initialization failed after multiple attempts' 
+            });
+          }
         }
-      } catch (error) {
-        console.error('💥 Storage initialization error:', error);
-        dispatch({ 
-          type: 'SET_ERROR', 
-          payload: error instanceof Error ? error.message : 'Storage initialization failed' 
-        });
-      } finally {
-        dispatch({ type: 'SET_LOADING', payload: false });
+        
+        retryCount++;
+        if (retryCount < maxRetries) {
+          console.log(`⏳ Retrying in 1 second...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
       }
+      
+      dispatch({ type: 'SET_LOADING', payload: false });
     };
 
     initializeStorage();
@@ -199,11 +223,14 @@ export function FileStorageProvider({ children }: FileStorageProviderProps) {
   // Load files from storage
   const loadFiles = useCallback(async () => {
     try {
+      console.log('📁 Loading files from storage...');
       const files = await fileStorageService.listFiles();
+      console.log(`📁 Loaded ${files.length} files:`, files.map(f => f.name));
       dispatch({ type: 'SET_FILES', payload: files });
     } catch (error) {
-      console.error('Failed to load files:', error);
-      throw error;
+      console.error('❌ Failed to load files:', error);
+      // Don't throw error - just set empty files array
+      dispatch({ type: 'SET_FILES', payload: [] });
     }
   }, [fileStorageService]);
 

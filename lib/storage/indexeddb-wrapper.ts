@@ -27,11 +27,15 @@ export class IndexedDBWrapper {
    */
   async initialize(): Promise<void> {
     if (this.isInitialized && this.db) {
+      console.log('🔄 IndexedDB already initialized');
       return;
     }
 
+    console.log('🔄 Initializing IndexedDB:', this.dbName, 'version', this.dbVersion);
+
     return new Promise((resolve, reject) => {
       if (!window.indexedDB) {
+        console.error('❌ IndexedDB not supported');
         reject(new StorageError(
           StorageErrorType.INDEXEDDB_UNAVAILABLE,
           'IndexedDB is not supported in this browser'
@@ -42,6 +46,7 @@ export class IndexedDBWrapper {
       const request = indexedDB.open(this.dbName, this.dbVersion);
 
       request.onerror = () => {
+        console.error('❌ IndexedDB open failed:', request.error);
         reject(new StorageError(
           StorageErrorType.INDEXEDDB_UNAVAILABLE,
           'Failed to open IndexedDB database',
@@ -50,18 +55,20 @@ export class IndexedDBWrapper {
       };
 
       request.onsuccess = () => {
+        console.log('✅ IndexedDB opened successfully');
         this.db = request.result;
         this.isInitialized = true;
 
         // Handle database errors after opening
         this.db.onerror = (event) => {
-          console.error('IndexedDB error:', event);
+          console.error('💥 IndexedDB runtime error:', event);
         };
 
         resolve();
       };
 
       request.onupgradeneeded = (event) => {
+        console.log('🔧 IndexedDB schema upgrade needed');
         const db = (event.target as IDBOpenDBRequest).result;
         this.setupSchema(db);
       };

@@ -393,15 +393,32 @@ export class FileProcessor {
    */
   async generateChecksum(data: ArrayBuffer): Promise<string> {
     try {
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      // Check if crypto.subtle is available
+      if (typeof crypto !== 'undefined' && crypto.subtle) {
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      } else {
+        // Fallback to simple hash if crypto.subtle is not available
+        console.warn('crypto.subtle not available, using fallback hash');
+        const dataView = new Uint8Array(data);
+        const dataString = Array.from(dataView).map(b => String.fromCharCode(b)).join('');
+        return this.simpleHash(dataString);
+      }
     } catch (error) {
-      throw new StorageError(
-        StorageErrorType.VALIDATION_FAILED,
-        'Failed to generate file checksum',
-        error as Error
-      );
+      console.error('Checksum generation error:', error);
+      // Fallback to simple hash on any error
+      try {
+        const dataView = new Uint8Array(data);
+        const dataString = Array.from(dataView).map(b => String.fromCharCode(b)).join('');
+        return this.simpleHash(dataString);
+      } catch (fallbackError) {
+        throw new StorageError(
+          StorageErrorType.VALIDATION_FAILED,
+          'Failed to generate file checksum',
+          fallbackError as Error
+        );
+      }
     }
   }
 
