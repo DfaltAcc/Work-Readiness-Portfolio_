@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
+import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { VideoUpload } from "@/components/video-upload"
@@ -97,10 +98,13 @@ export function PortfolioSection({ id, title, description, evidence, reflection 
               <p className="text-sm text-muted-foreground">Visual evidence of networking achievements and professional connections</p>
             </div>
             <div className="rounded-lg overflow-hidden bg-muted p-4">
-              <img 
+              <Image 
                 src="/1761155060880.jpeg" 
                 alt="Professional networking evidence and achievements"
+                width={800}
+                height={600}
                 className="w-full h-auto max-h-96 object-contain rounded-md"
+                priority
               />
             </div>
           </Card>
