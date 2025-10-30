@@ -1,12 +1,14 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { VideoUpload } from "@/components/video-upload"
 import { DocumentUpload } from "@/components/document-upload"
-import { useFileStorageState } from "@/lib/storage/file-storage-context"
+import { useFileStorageState, useFileStorage } from "@/lib/storage/file-storage-context"
+import { StoredFileInfo } from "@/lib/storage/types"
+import { Download, FileText, Video, Image as ImageIcon, Trash2 } from "lucide-react"
 
 interface Evidence {
   title: string
@@ -118,6 +120,11 @@ export function PortfolioSection({ id, title, description, evidence, reflection 
           </Card>
         )}
 
+        {/* Saved Files Display */}
+        {isInitialized && files.length > 0 && (
+          <SavedFilesDisplay files={files} sectionId={id} />
+        )}
+
         {/* Document Upload - Show for all sections */}
         <DocumentUpload
           maxSizeMB={10}
@@ -202,5 +209,150 @@ export function PortfolioSection({ id, title, description, evidence, reflection 
         </Card>
       </div>
     </section>
+  )
+}
+
+// Component to display saved files
+function SavedFilesDisplay({ files, sectionId }: { files: StoredFileInfo[], sectionId: string }) {
+  const { retrieveFile, deleteFile } = useFileStorage()
+  const [isLoading, setIsLoading] = useState<string | null>(null)
+
+  const handleDownload = async (file: StoredFileInfo) => {
+    try {
+      setIsLoading(file.id)
+      const retrievedFile = await retrieveFile(file.id)
+      
+      if (retrievedFile) {
+        // Create download link
+        const url = URL.createObjectURL(retrievedFile)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = file.name
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+      }
+    } catch (error) {
+      console.error('Failed to download file:', error)
+    } finally {
+      setIsLoading(null)
+    }
+  }
+
+  const handleDelete = async (file: StoredFileInfo) => {
+    if (confirm(`Are you sure you want to delete "${file.name}"?`)) {
+      try {
+        setIsLoading(file.id)
+        await deleteFile(file.id)
+      } catch (error) {
+        console.error('Failed to delete file:', error)
+      } finally {
+        setIsLoading(null)
+      }
+    }
+  }
+
+  const getFileIcon = (file: StoredFileInfo) => {
+    if (file.category === 'video') {
+      return <Video className="w-4 h-4" />
+    }
+    
+    if (file.type.startsWith('image/')) {
+      return <ImageIcon className="w-4 h-4" />
+    }
+    
+    return <FileText className="w-4 h-4" />
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date)
+  }
+
+  if (files.length === 0) {
+    return null
+  }
+
+  return (
+    <Card className="p-6 space-y-4 border-border/50 shadow-sm">
+      <div className="space-y-2">
+        <Badge variant="secondary" className="mb-2">
+          Saved Evidence Files
+        </Badge>
+        <h3 className="text-xl font-semibold">Permanently Stored Files</h3>
+        <p className="text-sm text-muted-foreground">
+          Files uploaded to this portfolio section are saved permanently across browser sessions
+        </p>
+      </div>
+      
+      <div className="space-y-3">
+        {files.map((file) => (
+          <div
+            key={file.id}
+            className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border"
+          >
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="flex-shrink-0 text-muted-foreground">
+                {getFileIcon(file)}
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{file.name}</p>
+                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                  <span>{formatFileSize(file.size)}</span>
+                  <span>{formatDate(file.storedAt)}</span>
+                  {file.compressed && (
+                    <Badge variant="outline" className="text-xs">
+                      Compressed
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDownload(file)}
+                disabled={isLoading === file.id}
+                className="h-8 px-2"
+              >
+                <Download className="w-3 h-3" />
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDelete(file)}
+                disabled={isLoading === file.id}
+                className="h-8 px-2 text-destructive hover:text-destructive"
+              >
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="text-xs text-muted-foreground pt-2 border-t">
+        <p>💾 Files are stored locally in your browser using IndexedDB and will persist across sessions</p>
+        <p>🔒 Your files are private and never uploaded to external servers</p>
+      </div>
+    </Card>
   )
 }
