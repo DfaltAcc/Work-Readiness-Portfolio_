@@ -86,6 +86,26 @@ export function PortfolioSection({ id, title, description, evidence, reflection 
           />
         )}
 
+        {/* Permanent Media Display */}
+        {id === "professional-networking" && (
+          <Card className="p-6 space-y-4 border-border/50 shadow-sm">
+            <div className="space-y-2">
+              <Badge variant="secondary" className="mb-2">
+                Networking Evidence
+              </Badge>
+              <h3 className="text-xl font-semibold">Professional Networking Success</h3>
+              <p className="text-sm text-muted-foreground">Visual evidence of networking achievements and professional connections</p>
+            </div>
+            <div className="rounded-lg overflow-hidden bg-muted p-4">
+              <img 
+                src="/1761155060880.jpeg" 
+                alt="Professional networking evidence and achievements"
+                className="w-full h-auto max-h-96 object-contain rounded-md"
+              />
+            </div>
+          </Card>
+        )}
+
         {/* Document Upload - Show for all sections */}
         <DocumentUpload
           maxSizeMB={10}
