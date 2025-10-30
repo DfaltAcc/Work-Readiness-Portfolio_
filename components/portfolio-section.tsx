@@ -98,14 +98,22 @@ export function PortfolioSection({ id, title, description, evidence, reflection 
               <p className="text-sm text-muted-foreground">Visual evidence of networking achievements and professional connections</p>
             </div>
             <div className="rounded-lg overflow-hidden bg-muted p-4">
-              <Image 
-                src="/1761155060880.jpeg" 
+              <img 
+                src="/networking-evidence.jpeg" 
                 alt="Professional networking evidence and achievements"
-                width={800}
-                height={600}
                 className="w-full h-auto max-h-96 object-contain rounded-md"
-                priority
+                onError={(e) => {
+                  console.error('Image failed to load:', e);
+                  const target = e.currentTarget;
+                  target.src = '/placeholder.jpg'; // Fallback to placeholder
+                }}
+                onLoad={() => console.log('Image loaded successfully')}
               />
+              <noscript>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Image: Professional networking evidence and achievements
+                </p>
+              </noscript>
             </div>
           </Card>
         )}
