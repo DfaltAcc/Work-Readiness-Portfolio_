@@ -216,6 +216,51 @@ export function PortfolioSection({ id, title, description, evidence, reflection 
 function SavedFilesDisplay({ files, sectionId }: { files: StoredFileInfo[], sectionId: string }) {
   const { retrieveFile, deleteFile } = useFileStorage()
   const [isLoading, setIsLoading] = useState<string | null>(null)
+  const [fileUrls, setFileUrls] = useState<Map<string, string>>(new Map())
+  const [expandedFiles, setExpandedFiles] = useState<Set<string>>(new Set())
+
+  // Load file URLs for images and videos
+  useEffect(() => {
+    const loadFileUrls = async () => {
+      const newUrls = new Map<string, string>()
+      
+      for (const file of files) {
+        // Only load URLs for images and videos
+        if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+          try {
+            const retrievedFile = await retrieveFile(file.id)
+            if (retrievedFile) {
+              const url = URL.createObjectURL(retrievedFile)
+              newUrls.set(file.id, url)
+            }
+          } catch (error) {
+            console.error(`Failed to load file ${file.id}:`, error)
+          }
+        }
+      }
+      
+      setFileUrls(newUrls)
+    }
+
+    loadFileUrls()
+
+    // Cleanup URLs on unmount
+    return () => {
+      fileUrls.forEach(url => URL.revokeObjectURL(url))
+    }
+  }, [files, retrieveFile])
+
+  const toggleExpanded = (fileId: string) => {
+    setExpandedFiles(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(fileId)) {
+        newSet.delete(fileId)
+      } else {
+        newSet.add(fileId)
+      }
+      return newSet
+    })
+  }
 
   const handleDownload = async (file: StoredFileInfo) => {
     try {
@@ -300,53 +345,96 @@ function SavedFilesDisplay({ files, sectionId }: { files: StoredFileInfo[], sect
       </div>
       
       <div className="space-y-3">
-        {files.map((file) => (
-          <div
-            key={file.id}
-            className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border"
-          >
-            <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="flex-shrink-0 text-muted-foreground">
-                {getFileIcon(file)}
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{file.name}</p>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span>{formatFileSize(file.size)}</span>
-                  <span>{formatDate(file.storedAt)}</span>
-                  {file.compressed && (
-                    <Badge variant="outline" className="text-xs">
-                      Compressed
-                    </Badge>
+        {files.map((file) => {
+          const fileUrl = fileUrls.get(file.id)
+          const isExpanded = expandedFiles.has(file.id)
+          const isImage = file.type.startsWith('image/')
+          const isVideo = file.type.startsWith('video/')
+          const hasPreview = isImage || isVideo
+
+          return (
+            <div key={file.id} className="bg-muted/50 rounded-lg border overflow-hidden">
+              <div className="flex items-center justify-between p-3">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className="flex-shrink-0 text-muted-foreground">
+                    {getFileIcon(file)}
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{file.name}</p>
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span>{formatFileSize(file.size)}</span>
+                      <span>{formatDate(file.storedAt)}</span>
+                      {file.compressed && (
+                        <Badge variant="outline" className="text-xs">
+                          Compressed
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  {hasPreview && fileUrl && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleExpanded(file.id)}
+                      className="h-8 px-2"
+                    >
+                      {isExpanded ? 'Hide' : 'Show'}
+                    </Button>
                   )}
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDownload(file)}
+                    disabled={isLoading === file.id}
+                    className="h-8 px-2"
+                  >
+                    <Download className="w-3 h-3" />
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDelete(file)}
+                    disabled={isLoading === file.id}
+                    className="h-8 px-2 text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </Button>
                 </div>
               </div>
+
+              {/* Image/Video Preview */}
+              {isExpanded && fileUrl && (
+                <div className="px-3 pb-3">
+                  <div className="rounded-lg overflow-hidden bg-background border">
+                    {isImage && (
+                      <img
+                        src={fileUrl}
+                        alt={file.name}
+                        className="w-full h-auto max-h-96 object-contain"
+                      />
+                    )}
+                    {isVideo && (
+                      <video
+                        src={fileUrl}
+                        controls
+                        className="w-full h-auto max-h-96"
+                        preload="metadata"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleDownload(file)}
-                disabled={isLoading === file.id}
-                className="h-8 px-2"
-              >
-                <Download className="w-3 h-3" />
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleDelete(file)}
-                disabled={isLoading === file.id}
-                className="h-8 px-2 text-destructive hover:text-destructive"
-              >
-                <Trash2 className="w-3 h-3" />
-              </Button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
       
       <div className="text-xs text-muted-foreground pt-2 border-t">
