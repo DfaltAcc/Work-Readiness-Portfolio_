@@ -182,8 +182,9 @@ I took my supervisor Luyolo's feedback seriously and made real changes. I starte
 **Result**  
 Over these 10 months, the transformation has been huge. After the first few weeks, Luyolo commented that I'd 'completely turned around' and showed real professional maturity. The team started trusting me with more responsibility—including me in client meetings and assigning me more complex bugs to fix. One developer specifically requests me to help on his projects because I'm 'reliable and keep people updated.'
 
-![Alt text description]()
-![Alt text description]()
+![Alt text description](ScreenshotOdoo3.png)
+![Alt text description](ScreenshotOdoo2.png)
+![Alt text description](ScreenshotOdoo.png)
 
 ---
 
