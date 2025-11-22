@@ -66,9 +66,6 @@ The real game-changer was the SHL online platform. It simulates real interviews 
 
 **Result**  
 My confidence went from like a 3 out of 10 to maybe an 8 out of 10. My callback rate jumped from about 10% to 60%, which was huge. Real confidence doesn't come from memorizing perfect answers—it comes from preparing thoroughly, knowing your own story, and being okay with being human.
-![Alt text description](1758143765879.jpeg)
-![Alt text description](1761314200272.jpeg)
-![Alt text description](1758495695744.jpeg)
 
 ---
 
@@ -136,7 +133,11 @@ I decided to prepare thoroughly before each event. For AWS community meetups, I 
 
 **Result**  
 My LinkedIn connections went from 12 to 61 through consistent engagement. My profile views jumped from 2 per week to 25+. But here's the best part: three months later, a DevOps engineer I met at an AWS meetup messaged me directly on LinkedIn with an internship opportunity and offered to refer me internally. I got the interview and ended up getting the internship offer.
-![Alt text description](path/to/image1.jpeg)
+
+![Alt text description](1758143765879.jpeg)
+![Alt text description](1761314200272.jpeg)
+![Alt text description](1758495695744.jpeg)
+
 ---
 
 ## Workplace Etiquette
