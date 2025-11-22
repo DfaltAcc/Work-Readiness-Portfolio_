@@ -145,6 +145,9 @@ My LinkedIn connections went from 12 to 61 through consistent engagement. My pro
 ![Alt text description](1758143765879.jpeg)
 ![Alt text description](1761314200272.jpeg)
 ![Alt text description](1758495695744.jpeg)
+![Alt text description](Screenshot4.png)
+![Alt text description](Screenshot5.png)
+
 
 ---
 
@@ -179,7 +182,9 @@ I took my supervisor Luyolo's feedback seriously and made real changes. I starte
 **Result**  
 Over these 10 months, the transformation has been huge. After the first few weeks, Luyolo commented that I'd 'completely turned around' and showed real professional maturity. The team started trusting me with more responsibility—including me in client meetings and assigning me more complex bugs to fix. One developer specifically requests me to help on his projects because I'm 'reliable and keep people updated.'
 
-![Alt text description](path/to/image.jpeg)
+![Alt text description]()
+![Alt text description]()
+
 ---
 
 ## About This Portfolio
