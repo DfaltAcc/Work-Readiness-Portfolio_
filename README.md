@@ -66,7 +66,7 @@ The real game-changer was the SHL online platform. It simulates real interviews 
 
 **Result**  
 My confidence went from like a 3 out of 10 to maybe an 8 out of 10. My callback rate jumped from about 10% to 60%, which was huge. Real confidence doesn't come from memorizing perfect answers—it comes from preparing thoroughly, knowing your own story, and being okay with being human.
-![Alt text description](path/to/image.jpeg)
+![Alt text description](1758143765879.jpeg)
 
 ---
 
@@ -167,6 +167,7 @@ I took my supervisor Luyolo's feedback seriously and made real changes. I starte
 
 **Result**  
 Over these 10 months, the transformation has been huge. After the first few weeks, Luyolo commented that I'd 'completely turned around' and showed real professional maturity. The team started trusting me with more responsibility—including me in client meetings and assigning me more complex bugs to fix. One developer specifically requests me to help on his projects because I'm 'reliable and keep people updated.'
+
 ![Alt text description](path/to/image.jpeg)
 ---
 
