@@ -66,6 +66,7 @@ The real game-changer was the SHL online platform. It simulates real interviews 
 
 **Result**  
 My confidence went from like a 3 out of 10 to maybe an 8 out of 10. My callback rate jumped from about 10% to 60%, which was huge. Real confidence doesn't come from memorizing perfect answers—it comes from preparing thoroughly, knowing your own story, and being okay with being human.
+![Alt text description](path/to/image.jpeg)
 
 ---
 
@@ -133,7 +134,7 @@ I decided to prepare thoroughly before each event. For AWS community meetups, I 
 
 **Result**  
 My LinkedIn connections went from 12 to 61 through consistent engagement. My profile views jumped from 2 per week to 25+. But here's the best part: three months later, a DevOps engineer I met at an AWS meetup messaged me directly on LinkedIn with an internship opportunity and offered to refer me internally. I got the interview and ended up getting the internship offer.
-
+![Alt text description](path/to/image1.jpeg)
 ---
 
 ## Workplace Etiquette
@@ -166,7 +167,7 @@ I took my supervisor Luyolo's feedback seriously and made real changes. I starte
 
 **Result**  
 Over these 10 months, the transformation has been huge. After the first few weeks, Luyolo commented that I'd 'completely turned around' and showed real professional maturity. The team started trusting me with more responsibility—including me in client meetings and assigning me more complex bugs to fix. One developer specifically requests me to help on his projects because I'm 'reliable and keep people updated.'
-
+![Alt text description](path/to/image.jpeg)
 ---
 
 ## About This Portfolio
