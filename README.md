@@ -67,6 +67,8 @@ The real game-changer was the SHL online platform. It simulates real interviews 
 **Result**  
 My confidence went from like a 3 out of 10 to maybe an 8 out of 10. My callback rate jumped from about 10% to 60%, which was huge. Real confidence doesn't come from memorizing perfect answers—it comes from preparing thoroughly, knowing your own story, and being okay with being human.
 ![Alt text description](1758143765879.jpeg)
+![Alt text description](1761314200272.jpeg)
+![Alt text description](1758495695744.jpeg)
 
 ---
 
