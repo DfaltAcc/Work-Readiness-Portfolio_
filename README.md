@@ -34,9 +34,9 @@ I started by watching how the team communicated and taking notes on what seemed 
 **Result**  
 My writing got so much better during that placement. Luyolo actually told me my updates were 'clear and professional—exactly what we need on the team.' I realized that good business communication in tech isn't about writing long formal emails or using fancy words. It's about being clear, backing up what you say with evidence, and not wasting people's time.
 
-![Alt text description](Screenshot (640).png)
-![Alt text description](Screenshot (642).png)
-![Alt text description](Screenshot (643).png)
+![Alt text description](Screenshot1.png)
+![Alt text description](Screenshot2.png)
+![Alt text description](Screenshot3.png)
 
 ---
 
